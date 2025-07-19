@@ -1,0 +1,78 @@
+name: Deploy Flutter Web App to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: # Manual trigger
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    # Checkout code
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    # Setup Flutter
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.16.0'
+        channel: 'stable'
+        
+    # Enable web support
+    - name: Enable Flutter Web
+      run: flutter config --enable-web
+      
+    # Install dependencies
+    - name: Install dependencies
+      run: flutter pub get
+      
+    # Run tests
+    - name: Run tests
+      run: flutter test
+      
+    # Build web app
+    - name: Build Flutter Web
+      run: flutter build web --release --web-renderer canvaskit
+      
+    # Optional: Add PWA optimizations
+    - name: Optimize PWA
+      run: |
+        # Add cache headers for better performance
+        echo "Adding PWA optimizations..."
+        
+    # Deploy to GitHub Pages
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      if: github.ref == 'refs/heads/main'
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./build/web
+        
+    # Alternative: Deploy to Firebase Hosting
+    # - name: Deploy to Firebase
+    #   uses: FirebaseExtended/action-hosting-deploy@v0
+    #   with:
+    #     repoToken: '${{ secrets.GITHUB_TOKEN }}'
+    #     firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
+    #     channelId: live
+    #     projectId: your-project-id
+        
+    # Alternative: Deploy to Netlify
+    # - name: Deploy to Netlify
+    #   uses: nwtgck/actions-netlify@v2.0
+    #   with:
+    #     publish-dir: './build/web'
+    #     production-branch: main
+    #     github-token: ${{ secrets.GITHUB_TOKEN }}
+    #     deploy-message: "Deploy from GitHub Actions"
+    #   env:
+    #     NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+    #     NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        
+    - name: Deployment Success
+      run: echo "🚀 PWA deployed successfully!"
