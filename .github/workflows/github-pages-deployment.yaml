@@ -37,13 +37,7 @@ jobs:
       
     # Build web app
     - name: Build Flutter Web
-      run: flutter build web --release --web-renderer canvaskit
-      
-    # Optional: Add PWA optimizations
-    - name: Optimize PWA
-      run: |
-        # Add cache headers for better performance
-        echo "Adding PWA optimizations..."
+      run: flutter build web --release
         
     # Deploy to GitHub Pages
     - name: Deploy to GitHub Pages
