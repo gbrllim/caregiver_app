@@ -19,7 +19,6 @@ A Flutter application with Firebase Phone Authentication for Singapore users, fe
 3. **Personalized Home**: Home screen displays the selected caretakee's information
 4. **Profile Management**: Users can switch between different caretakee profiles
 
-
 ## Setup Instructions
 
 ### 1. Firebase Setup
