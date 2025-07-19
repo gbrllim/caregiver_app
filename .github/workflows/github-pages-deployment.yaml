@@ -33,7 +33,7 @@ jobs:
       
     # Run tests
     - name: Run tests
-      run: flutter test
+      run: flutter test --coverage
       
     # Build web app
     - name: Build Flutter Web
