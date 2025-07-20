@@ -157,52 +157,82 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
+        child: Column(
           children: [
             DrawerHeader(
               decoration: BoxDecoration(color: Colors.deepPurple.shade50),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(
-                    Icons.health_and_safety,
-                    size: 40,
-                    color: Colors.deepPurple,
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Caregiver App',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+              child: Container(
+                width: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(
+                      Icons.favorite,
+                      size: 32,
                       color: Colors.deepPurple,
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Logged in as: ${user?.phoneNumber ?? 'Unknown'}',
-                    style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
-                  ),
-                ],
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Caregiver App',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.deepPurple,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Logged in as: ${user?.phoneNumber ?? 'Unknown'}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text('Home'),
+              leading: const Icon(Icons.calendar_today),
+              title: const Text('Schedule'),
               onTap: () {
                 Navigator.pop(context);
               },
             ),
-            if (widget.selectedProfile != null)
-              ListTile(
-                leading: const Icon(Icons.people),
-                title: const Text('Switch Profile'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.of(context).pushReplacementNamed('/profiles');
-                },
-              ),
+            ListTile(
+              leading: const Icon(Icons.medical_services),
+              title: const Text('Care Protocol'),
+              onTap: () {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Care Protocol coming soon!')),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.book),
+              title: const Text('Symptoms Library'),
+              onTap: () {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Symptoms Library coming soon!'),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.local_pharmacy),
+              title: const Text('Essentials'),
+              onTap: () {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Essentials coming soon!')),
+                );
+              },
+            ),
+
+            Spacer(),
             ListTile(
               leading: const Icon(Icons.settings),
               title: const Text('Settings'),
@@ -213,7 +243,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
             ),
-            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.help),
+              title: const Text('Help'),
+              onTap: () {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Help coming soon!')),
+                );
+              },
+            ),
             ListTile(
               leading: const Icon(Icons.logout, color: Colors.red),
               title: const Text('Logout', style: TextStyle(color: Colors.red)),
@@ -225,9 +264,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
               },
             ),
+            const SizedBox(height: 16),
           ],
         ),
       ),
+
       // Main content
       body: Padding(padding: const EdgeInsets.all(24.0), child: _buildBody()),
     );
