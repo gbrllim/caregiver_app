@@ -5,6 +5,7 @@ import 'screens/auth_wrapper.dart';
 import 'screens/phone_login_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/profile_selection_screen.dart';
+import 'screens/firestore_test_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const PhoneLoginScreen(),
         '/home': (context) => const HomeScreen(),
         '/profiles': (context) => const ProfileSelectionScreen(),
+        '/firestore-test': (context) => const FirestoreTestScreen(),
       },
     );
   }

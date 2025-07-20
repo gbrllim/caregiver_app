@@ -1,0 +1,20 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow authenticated users to read/write their own data (more permissive for testing)
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Medicine reminders: allow authenticated users to access all for now
+    match /medicine_reminders/{reminderId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Caretakee profiles: allow authenticated users to access all for now
+    match /caretakee_profiles/{profileId} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}

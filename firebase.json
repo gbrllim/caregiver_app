@@ -1,1 +1,43 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"caregiver-app-fec3f","appId":"1:631982115514:android:4fc6d18a6a1c8d3f9b1083","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"caregiver-app-fec3f","appId":"1:631982115514:ios:cb693c3c22fee1089b1083","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"macos":{"default":{"projectId":"caregiver-app-fec3f","appId":"1:631982115514:ios:cb693c3c22fee1089b1083","uploadDebugSymbols":false,"fileOutput":"macos/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"caregiver-app-fec3f","configurations":{"android":"1:631982115514:android:4fc6d18a6a1c8d3f9b1083","ios":"1:631982115514:ios:cb693c3c22fee1089b1083","web":"1:631982115514:web:f5a0c4daf7f3bc559b1083"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "caregiver-app-fec3f",
+          "appId": "1:631982115514:android:4fc6d18a6a1c8d3f9b1083",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "caregiver-app-fec3f",
+          "appId": "1:631982115514:ios:cb693c3c22fee1089b1083",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "caregiver-app-fec3f",
+          "appId": "1:631982115514:ios:cb693c3c22fee1089b1083",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "caregiver-app-fec3f",
+          "configurations": {
+            "android": "1:631982115514:android:4fc6d18a6a1c8d3f9b1083",
+            "ios": "1:631982115514:ios:cb693c3c22fee1089b1083",
+            "web": "1:631982115514:web:f5a0c4daf7f3bc559b1083"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  }
+}
