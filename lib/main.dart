@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
+import 'package:url_strategy/url_strategy.dart';
 import 'firebase_options.dart';
 import 'screens/auth_wrapper.dart';
 import 'screens/phone_login_screen.dart';
@@ -9,6 +11,13 @@ import 'screens/firestore_test_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Configure URL strategy for web
+  if (kIsWeb) {
+    // Use path URL strategy for better GitHub Pages compatibility
+    setPathUrlStrategy();
+  }
+  
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
