@@ -17,7 +17,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final MedicineReminderService _medicineReminderService = MedicineReminderService();
+  final MedicineReminderService _medicineReminderService =
+      MedicineReminderService();
   List<MedicineReminder> _medicineReminders = [];
   bool _isLoadingReminders = false;
 
@@ -51,10 +52,14 @@ class _HomeScreenState extends State<HomeScreen> {
       // First test Firestore connection
       print('Testing Firestore connection...');
       await _medicineReminderService.testFirestoreConnection();
-      
-      print('Loading medicine reminders for profile: ${widget.selectedProfile!.id}');
-      final reminders = await _medicineReminderService.getMedicineReminders(widget.selectedProfile!.id);
-      
+
+      print(
+        'Loading medicine reminders for profile: ${widget.selectedProfile!.id}',
+      );
+      final reminders = await _medicineReminderService.getMedicineReminders(
+        widget.selectedProfile!.id,
+      );
+
       print('Successfully loaded ${reminders.length} reminders');
       setState(() {
         _medicineReminders = reminders;
@@ -82,7 +87,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final result = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
-        builder: (context) => AddMedicineReminderScreen(profile: widget.selectedProfile!),
+        builder: (context) =>
+            AddMedicineReminderScreen(profile: widget.selectedProfile!),
       ),
     );
 
@@ -118,7 +124,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     radius: 16,
                     backgroundColor: Colors.deepPurple.shade100,
                     child: Text(
-                      widget.selectedProfile!.name.substring(0, 1).toUpperCase(),
+                      widget.selectedProfile!.name
+                          .substring(0, 1)
+                          .toUpperCase(),
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -132,7 +140,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       Navigator.of(context).pushReplacementNamed('/profiles');
                     },
                     child: Text(
-                      widget.selectedProfile!.name.split(' ')[0], // First name only
+                      widget.selectedProfile!.name.split(
+                        ' ',
+                      )[0], // First name only
                       style: const TextStyle(
                         color: Colors.black87,
                         fontSize: 14,
@@ -219,10 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       // Main content
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: _buildBody(),
-      ),
+      body: Padding(padding: const EdgeInsets.all(24.0), child: _buildBody()),
     );
   }
 
@@ -259,10 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 const Text(
                   'Your caregiving journey starts here',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
@@ -297,10 +301,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Text(
               'Medicine Reminders for ${widget.selectedProfile!.name}',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             IconButton(
               onPressed: _navigateToAddReminder,
@@ -322,7 +323,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   // TODO: Navigate to medicine reminder details screen
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Reminder details coming soon!')),
+                    const SnackBar(
+                      content: Text('Reminder details coming soon!'),
+                    ),
                   );
                 },
               );

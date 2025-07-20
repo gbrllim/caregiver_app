@@ -12,24 +12,26 @@ class MedicineReminderService {
     try {
       print('Testing Firestore connection...');
       print('Current user: ${_auth.currentUser?.uid}');
-      
+
       // Try to write a test document
       await _firestore.collection('test_collection').doc('test_doc').set({
         'message': 'Test from Flutter',
         'timestamp': FieldValue.serverTimestamp(),
         'userId': _auth.currentUser?.uid,
       });
-      
+
       print('✅ Write test successful');
-      
+
       // Try to read the test document
-      DocumentSnapshot doc = await _firestore.collection('test_collection').doc('test_doc').get();
+      DocumentSnapshot doc = await _firestore
+          .collection('test_collection')
+          .doc('test_doc')
+          .get();
       print('✅ Read test successful: ${doc.exists}');
-      
+
       // Clean up
       await _firestore.collection('test_collection').doc('test_doc').delete();
       print('✅ Firestore is working properly');
-      
     } catch (e) {
       print('❌ Firestore test failed: $e');
       throw e;
@@ -45,11 +47,11 @@ class MedicineReminderService {
       }
 
       print('Adding medicine reminder for profile: ${reminder.profileId}');
-      
+
       DocumentReference docRef = await _firestore
           .collection(_collection)
           .add(reminder.toJson());
-      
+
       print('Medicine reminder added with ID: ${docRef.id}');
       return docRef.id;
     } catch (e) {
@@ -67,7 +69,7 @@ class MedicineReminderService {
       }
 
       print('Getting medicine reminders for profile: $profileId');
-      
+
       // First try without orderBy to avoid index issues
       QuerySnapshot querySnapshot = await _firestore
           .collection(_collection)
@@ -75,7 +77,7 @@ class MedicineReminderService {
           .get();
 
       print('Found ${querySnapshot.docs.length} medicine reminders');
-      
+
       List<MedicineReminder> reminders = querySnapshot.docs
           .map((doc) {
             try {
@@ -94,7 +96,7 @@ class MedicineReminderService {
 
       // Sort manually by createdAt descending
       reminders.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-      
+
       return reminders;
     } catch (e) {
       print('Error getting medicine reminders: $e');
@@ -124,11 +126,20 @@ class MedicineReminderService {
   }
 
   // Get active medicine reminders for today
-  Future<List<MedicineReminder>> getActiveMedicineReminders(String profileId) async {
+  Future<List<MedicineReminder>> getActiveMedicineReminders(
+    String profileId,
+  ) async {
     try {
       DateTime today = DateTime.now();
       DateTime startOfDay = DateTime(today.year, today.month, today.day);
-      DateTime endOfDay = DateTime(today.year, today.month, today.day, 23, 59, 59);
+      DateTime endOfDay = DateTime(
+        today.year,
+        today.month,
+        today.day,
+        23,
+        59,
+        59,
+      );
 
       QuerySnapshot querySnapshot = await _firestore
           .collection(_collection)
@@ -138,10 +149,12 @@ class MedicineReminderService {
           .get();
 
       return querySnapshot.docs
-          .map((doc) => MedicineReminder.fromJson({
-                'id': doc.id,
-                ...doc.data() as Map<String, dynamic>,
-              }))
+          .map(
+            (doc) => MedicineReminder.fromJson({
+              'id': doc.id,
+              ...doc.data() as Map<String, dynamic>,
+            }),
+          )
           .toList();
     } catch (e) {
       throw Exception('Failed to get active medicine reminders: $e');

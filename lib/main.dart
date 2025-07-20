@@ -11,13 +11,13 @@ import 'screens/firestore_test_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Configure URL strategy for web
   if (kIsWeb) {
     // Use path URL strategy for better GitHub Pages compatibility
     setPathUrlStrategy();
   }
-  
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }

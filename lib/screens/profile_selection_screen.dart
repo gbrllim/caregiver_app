@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/caretakee_profile.dart';
 import '../services/profile_service.dart';
 import '../services/auth_service.dart';
+import '../services/selected_profile_notifier.dart';
 import 'home_screen.dart';
 
 class ProfileSelectionScreen extends StatefulWidget {
@@ -27,15 +28,21 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
       // Get current user's ID
       final currentUser = authService.currentUser;
       if (currentUser != null) {
+        print('Loading profiles for user: ${currentUser.uid}');
+
         // Load profiles filtered by current caretaker ID
         final loadedProfiles = await ProfileService.getProfilesByCaretakerId(
           currentUser.uid,
         );
+
+        print('Found ${loadedProfiles.length} profiles for user');
+
         setState(() {
           profiles = loadedProfiles;
           isLoading = false;
         });
       } else {
+        print('No user logged in, redirecting to login');
         // No user logged in, redirect to login
         setState(() {
           isLoading = false;
@@ -45,6 +52,7 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
         }
       }
     } catch (e) {
+      print('Error loading profiles: $e');
       setState(() {
         isLoading = false;
       });
@@ -57,6 +65,9 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
   }
 
   void _selectProfile(CaretakeeProfile profile) {
+    // Update the global selected profile notifier
+    selectedProfileNotifier.setSelectedProfile(profile);
+
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => HomeScreen(selectedProfile: profile),
@@ -77,6 +88,15 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
         shadowColor: Colors.grey.shade200,
         leading: const SizedBox(), // Remove back button
         actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh, color: Colors.black87),
+            onPressed: () {
+              setState(() {
+                isLoading = true;
+              });
+              _loadProfiles();
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.black87),
             onPressed: () async {
@@ -107,13 +127,43 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
                   const SizedBox(height: 24),
                   Expanded(
                     child: profiles.isEmpty
-                        ? const Center(
-                            child: Text(
-                              'No profiles available',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey,
-                              ),
+                        ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.people_outline,
+                                  size: 64,
+                                  color: Colors.grey.shade400,
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'No profiles available',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Create a profile to get started',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey.shade500,
+                                  ),
+                                ),
+                                const SizedBox(height: 24),
+                                ElevatedButton.icon(
+                                  onPressed: _showCreateProfileDialog,
+                                  icon: const Icon(Icons.add),
+                                  label: const Text('Create Profile'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.deepPurple,
+                                    foregroundColor: Colors.white,
+                                  ),
+                                ),
+                              ],
                             ),
                           )
                         : ListView.builder(

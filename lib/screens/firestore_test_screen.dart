@@ -43,11 +43,15 @@ class _FirestoreTestScreenState extends State<FirestoreTestScreen> {
       });
 
       // Try to read the test document
-      DocumentSnapshot doc = await _firestore.collection('test').doc('test').get();
-      
+      DocumentSnapshot doc = await _firestore
+          .collection('test')
+          .doc('test')
+          .get();
+
       if (doc.exists) {
         setState(() {
-          _status = 'Success! Firestore is working properly.\nData: ${doc.data()}';
+          _status =
+              'Success! Firestore is working properly.\nData: ${doc.data()}';
         });
       } else {
         setState(() {
@@ -57,7 +61,6 @@ class _FirestoreTestScreenState extends State<FirestoreTestScreen> {
 
       // Clean up test document
       await _firestore.collection('test').doc('test').delete();
-
     } catch (e) {
       setState(() {
         _status = 'Error: $e';
@@ -68,9 +71,7 @@ class _FirestoreTestScreenState extends State<FirestoreTestScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Firestore Test'),
-      ),
+      appBar: AppBar(title: const Text('Firestore Test')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -81,10 +82,7 @@ class _FirestoreTestScreenState extends State<FirestoreTestScreen> {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-            Text(
-              _status,
-              style: const TextStyle(fontSize: 16),
-            ),
+            Text(_status, style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _testFirestore,

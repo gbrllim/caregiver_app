@@ -9,7 +9,8 @@ class AddMedicineReminderScreen extends StatefulWidget {
   const AddMedicineReminderScreen({super.key, required this.profile});
 
   @override
-  State<AddMedicineReminderScreen> createState() => _AddMedicineReminderScreenState();
+  State<AddMedicineReminderScreen> createState() =>
+      _AddMedicineReminderScreenState();
 }
 
 class _AddMedicineReminderScreenState extends State<AddMedicineReminderScreen> {
@@ -17,7 +18,7 @@ class _AddMedicineReminderScreenState extends State<AddMedicineReminderScreen> {
   final _medicationController = TextEditingController();
   final _dosageController = TextEditingController();
   final _notesController = TextEditingController();
-  
+
   DateTime? _startDate;
   DateTime? _endDate;
   String _selectedFrequency = 'Daily';
@@ -33,7 +34,8 @@ class _AddMedicineReminderScreenState extends State<AddMedicineReminderScreen> {
     'As needed',
   ];
 
-  final MedicineReminderService _medicineReminderService = MedicineReminderService();
+  final MedicineReminderService _medicineReminderService =
+      MedicineReminderService();
 
   @override
   void dispose() {
@@ -48,9 +50,11 @@ class _AddMedicineReminderScreenState extends State<AddMedicineReminderScreen> {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365 * 2)), // 2 years from now
+      lastDate: DateTime.now().add(
+        const Duration(days: 365 * 2),
+      ), // 2 years from now
     );
-    
+
     if (picked != null) {
       setState(() {
         if (isStartDate) {
@@ -91,7 +95,9 @@ class _AddMedicineReminderScreenState extends State<AddMedicineReminderScreen> {
         startDate: _startDate!,
         endDate: _endDate!,
         frequency: _selectedFrequency,
-        notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
+        notes: _notesController.text.trim().isEmpty
+            ? null
+            : _notesController.text.trim(),
         createdAt: DateTime.now(),
       );
 
@@ -99,15 +105,17 @@ class _AddMedicineReminderScreenState extends State<AddMedicineReminderScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Medicine reminder added successfully!')),
+          const SnackBar(
+            content: Text('Medicine reminder added successfully!'),
+          ),
         );
         Navigator.of(context).pop(true); // Return true to indicate success
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error adding reminder: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error adding reminder: $e')));
       }
     } finally {
       if (mounted) {
@@ -230,7 +238,9 @@ class _AddMedicineReminderScreenState extends State<AddMedicineReminderScreen> {
                         ? '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}'
                         : 'Select start date',
                     style: TextStyle(
-                      color: _startDate != null ? Colors.black : Colors.grey.shade600,
+                      color: _startDate != null
+                          ? Colors.black
+                          : Colors.grey.shade600,
                     ),
                   ),
                 ),
@@ -251,7 +261,9 @@ class _AddMedicineReminderScreenState extends State<AddMedicineReminderScreen> {
                         ? '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}'
                         : 'Select end date',
                     style: TextStyle(
-                      color: _endDate != null ? Colors.black : Colors.grey.shade600,
+                      color: _endDate != null
+                          ? Colors.black
+                          : Colors.grey.shade600,
                     ),
                   ),
                 ),

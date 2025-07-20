@@ -68,10 +68,44 @@ class ProfileService {
   ) async {
     // Simulate network delay
     await Future.delayed(const Duration(milliseconds: 500));
+
     final profiles = getMockProfiles();
-    return profiles
+
+    // If no profiles exist for this caretaker, create some default ones
+    final userProfiles = profiles
         .where((profile) => profile.caretakerId == caretakerId)
         .toList();
+
+    if (userProfiles.isEmpty) {
+      // Create default profiles for this new user
+      final defaultProfiles = _createDefaultProfilesForUser(caretakerId);
+      _profiles.addAll(defaultProfiles);
+      return defaultProfiles;
+    }
+
+    return userProfiles;
+  }
+
+  // Create default profiles for a new user
+  static List<CaretakeeProfile> _createDefaultProfilesForUser(
+    String caretakerId,
+  ) {
+    return [
+      CaretakeeProfile(
+        id: '${caretakerId}_1',
+        caretakerId: caretakerId,
+        name: 'Family Member',
+        relationship: 'Family',
+        age: 25,
+      ),
+      CaretakeeProfile(
+        id: '${caretakerId}_2',
+        caretakerId: caretakerId,
+        name: 'Loved One',
+        relationship: 'Close Friend',
+        age: 30,
+      ),
+    ];
   }
 
   // Get profile by ID
