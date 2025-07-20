@@ -24,11 +24,26 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
 
   Future<void> _loadProfiles() async {
     try {
-      final loadedProfiles = await ProfileService.getProfiles();
-      setState(() {
-        profiles = loadedProfiles;
-        isLoading = false;
-      });
+      // Get current user's ID
+      final currentUser = authService.currentUser;
+      if (currentUser != null) {
+        // Load profiles filtered by current caretaker ID
+        final loadedProfiles = await ProfileService.getProfilesByCaretakerId(
+          currentUser.uid,
+        );
+        setState(() {
+          profiles = loadedProfiles;
+          isLoading = false;
+        });
+      } else {
+        // No user logged in, redirect to login
+        setState(() {
+          isLoading = false;
+        });
+        if (mounted) {
+          Navigator.of(context).pushReplacementNamed('/login');
+        }
+      }
     } catch (e) {
       setState(() {
         isLoading = false;
@@ -81,7 +96,7 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Who are you caring for today?',
+                    'Welcome back!',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
@@ -165,6 +180,160 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
                 ],
               ),
             ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showCreateProfileDialog,
+        backgroundColor: Colors.deepPurple,
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
     );
+  }
+
+  void _showCreateProfileDialog() {
+    final nameController = TextEditingController();
+    final relationshipController = TextEditingController();
+    final ageController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Create New Profile'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Name *',
+                    border: OutlineInputBorder(),
+                    hintText: 'Enter full name',
+                  ),
+                  textCapitalization: TextCapitalization.words,
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: relationshipController,
+                  decoration: const InputDecoration(
+                    labelText: 'Relationship *',
+                    border: OutlineInputBorder(),
+                    hintText: 'e.g., Mother, Father, Brother, Sister',
+                  ),
+                  textCapitalization: TextCapitalization.words,
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: ageController,
+                  decoration: const InputDecoration(
+                    labelText: 'Age *',
+                    border: OutlineInputBorder(),
+                    hintText: 'Enter age in years',
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  '* Required fields',
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final navigator = Navigator.of(context);
+                await _createProfile(
+                  nameController.text,
+                  relationshipController.text,
+                  ageController.text,
+                );
+                navigator.pop();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepPurple,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Create'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _createProfile(
+    String name,
+    String relationship,
+    String ageText,
+  ) async {
+    if (name.trim().isEmpty ||
+        relationship.trim().isEmpty ||
+        ageText.trim().isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please fill in all fields')),
+        );
+      }
+      return;
+    }
+
+    final age = int.tryParse(ageText);
+    if (age == null || age <= 0) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please enter a valid age')),
+        );
+      }
+      return;
+    }
+
+    final currentUser = authService.currentUser;
+    if (currentUser == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('No user logged in')));
+      }
+      return;
+    }
+
+    try {
+      final newProfile = CaretakeeProfile(
+        id: DateTime.now().millisecondsSinceEpoch
+            .toString(), // Generate unique ID
+        caretakerId: currentUser.uid,
+        name: name.trim(),
+        relationship: relationship.trim(),
+        age: age,
+      );
+
+      final success = await ProfileService.addProfile(newProfile);
+      if (mounted) {
+        if (success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Profile created successfully!')),
+          );
+          // Reload profiles to show the new one
+          _loadProfiles();
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to create profile')),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error creating profile: $e')));
+      }
+    }
   }
 }

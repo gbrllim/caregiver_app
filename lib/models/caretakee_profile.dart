@@ -1,5 +1,6 @@
 class CaretakeeProfile {
   final String id;
+  final String caretakerId;
   final String name;
   final String relationship;
   final String? avatarUrl;
@@ -7,6 +8,7 @@ class CaretakeeProfile {
 
   CaretakeeProfile({
     required this.id,
+    required this.caretakerId,
     required this.name,
     required this.relationship,
     this.avatarUrl,
@@ -16,6 +18,7 @@ class CaretakeeProfile {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'caretakerId': caretakerId,
       'name': name,
       'relationship': relationship,
       'avatarUrl': avatarUrl,
@@ -26,6 +29,7 @@ class CaretakeeProfile {
   factory CaretakeeProfile.fromJson(Map<String, dynamic> json) {
     return CaretakeeProfile(
       id: json['id'],
+      caretakerId: json['caretakerId'],
       name: json['name'],
       relationship: json['relationship'],
       avatarUrl: json['avatarUrl'],
