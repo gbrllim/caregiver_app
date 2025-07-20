@@ -10,14 +10,14 @@ class ProfileService {
       // Profiles for caretaker 1
       CaretakeeProfile(
         id: '1',
-        caretakerId: 'jC0Wnu9WETenlafrCRyhj7INlj63',
+        caretakerId: '0EJxdR4GbvcP7N7Jdcr9oDn5vb83',
         name: 'Lucas',
         relationship: 'Younger Brother',
         age: 3,
       ),
       CaretakeeProfile(
         id: '2',
-        caretakerId: 'jC0Wnu9WETenlafrCRyhj7INlj63',
+        caretakerId: '0EJxdR4GbvcP7N7Jdcr9oDn5vb83',
         name: 'Jonas',
         relationship: 'Older Brother',
         age: 5,
@@ -32,14 +32,14 @@ class ProfileService {
       // Profiles for caretaker 2 (different user)
       CaretakeeProfile(
         id: '4',
-        caretakerId: 'caretaker_2',
+        caretakerId: 'jC0Wnu9WETenlafrCRyhj7INlj63',
         name: 'Emma Wilson',
         relationship: 'Daughter',
         age: 8,
       ),
       CaretakeeProfile(
         id: '5',
-        caretakerId: 'caretaker_2',
+        caretakerId: 'jC0Wnu9WETenlafrCRyhj7INlj63',
         name: 'David Wilson',
         relationship: 'Father',
         age: 72,
