@@ -34,7 +34,7 @@ class MedicineReminderService {
       print('✅ Firestore is working properly');
     } catch (e) {
       print('❌ Firestore test failed: $e');
-      throw e;
+      rethrow;
     }
   }
 

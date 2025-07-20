@@ -16,6 +16,7 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
   List<CaretakeeProfile> profiles = [];
   bool isLoading = true;
   final AuthService authService = AuthService();
+  final ProfileService profileService = ProfileService();
 
   @override
   void initState() {
@@ -31,7 +32,7 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
         print('Loading profiles for user: ${currentUser.uid}');
 
         // Load profiles filtered by current caretaker ID
-        final loadedProfiles = await ProfileService.getProfilesByCaretakerId(
+        final loadedProfiles = await profileService.getProfilesByCaretakerId(
           currentUser.uid,
         );
 
@@ -355,6 +356,7 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
     }
 
     try {
+      final now = DateTime.now();
       final newProfile = CaretakeeProfile(
         id: DateTime.now().millisecondsSinceEpoch
             .toString(), // Generate unique ID
@@ -362,11 +364,13 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
         name: name.trim(),
         relationship: relationship.trim(),
         age: age,
+        createdAt: now,
+        updatedAt: now,
       );
 
-      final success = await ProfileService.addProfile(newProfile);
+      final profileId = await profileService.addProfile(newProfile);
       if (mounted) {
-        if (success) {
+        if (profileId.isNotEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Profile created successfully!')),
           );
